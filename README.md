@@ -83,12 +83,12 @@ This command will provide a report on the health of your Neovim setup, including
 
 | Function                        | Keybinding         | Description                          |
 |---------------------------------|--------------------|--------------------------------------|
-| **General**                     |                    |                                      |
-| Open Nvim Tree                  | `:`                | Open file explorer                   |
+| **Nvim Tree**                     |                    |                                      |
+| Open Nvim Tree                  | `-`                | Open file explorer                   |
 | Find current file in Nvim Tree  | `leader` + `Shift` + `n` | Locate current file in file explorer |
 | Add/Rename/Delete file in Nvim Tree | `m` + `a/r/d/c/p`  | Manage files in file explorer        |
 | **Telescope**                   |                    |                                      |
-| Find files                      | `leader` + `p`     | Open file finder                     |
+| Find files                      | `ctrl` + `p`     | Open file finder                     |
 | Open buffer file                | `space` + `p`      | Open buffer file                     |
 | Live grep                       | `space` + `f`      | Search for text in files             |
 
