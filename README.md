@@ -2,6 +2,8 @@
 
 This repository contains my personal Neovim configuration.
 
+<img width="1920" alt="Screenshot 2024-06-08 at 10 36 58" src="https://github.com/taisytran/my-neovim-setup/assets/16373463/c595bedd-32da-4dba-9f44-ecbaeb41d623">
+
 ## Installation
 
 1. Clone the repository into your Neovim configuration directory:
