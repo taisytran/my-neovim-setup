@@ -4,9 +4,7 @@ require('noice').setup({
       enabled = true,
       -- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
       -- See the section on formatting for more details on how to customize.
-      --- @type NoiceFormat|string
       format = "lsp_progress",
-      --- @type NoiceFormat|string
       format_done = "lsp_progress_done",
       throttle = 1000 / 30, -- frequency to update lsp progress message
       view = "mini",
@@ -18,12 +16,12 @@ require('noice').setup({
       ["vim.lsp.util.stylize_markdown"] = true,
       -- override cmp documentation with Noice (needs the other options to work)
       ["cmp.entry.get_documentation"] = true,
+      -- ["vim.lsp.util.open_floating_preview"] = true,
     },
     hover = {
       enabled = true,
       silent = false, -- set to true to not show a message if hover is not available
       view = nil, -- when nil, use defaults from documentation
-      ---@type NoiceViewOptions
       opts = {}, -- merged with defaults from documentation
     },
     signature = {
@@ -35,7 +33,6 @@ require('noice').setup({
         throttle = 50, -- Debounce lsp signature help request by 50ms
       },
       view = nil, -- when nil, use defaults from documentation
-      ---@type NoiceViewOptions
       opts = {}, -- merged with defaults from documentation
     },
     message = {
@@ -47,7 +44,6 @@ require('noice').setup({
     -- defaults for hover and signature help
     documentation = {
       view = "hover",
-      ---@type NoiceViewOptions
       opts = {
         lang = "markdown",
         replace = true,
@@ -68,15 +64,24 @@ require('noice').setup({
   --   view = "cmdline", -- Use the default cmdline view at the bottom
   -- },
   messages = {
-    -- NOTE: If you enable messages, then the cmdline is enabled automatically.
-    -- This is a current Neovim limitation.
-    enabled = true, -- enables the Noice messages UI
-    view = "notify", -- default view for messages
-    view_error = "notify", -- view for errors
-    view_warn = "notify", -- view for warnings
-    view_history = "messages", -- view for :messages
-    view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+    enabled = true,
+    view = "mini",
+    view_warn = "mini",
+    view_error = "mini",
+    filter = {
+      { find = "E%d+:%s+" },  -- Example regex to match error messages
+    },
   },
+  -- messages = {
+  --   -- NOTE: If you enable messages, then the cmdline is enabled automatically.
+  --   -- This is a current Neovim limitation.
+  --   enabled = true, -- enables the Noice messages UI
+  --   view = "notify", -- default view for messages
+  --   view_error = "notify", -- view for errors
+  --   view_warn = "notify", -- view for warnings
+  --   view_history = "messages", -- view for :messages
+  --   view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+  -- },
   popupmenu = {
     enabled = true,
     backend = "nui",

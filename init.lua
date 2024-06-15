@@ -50,8 +50,9 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     event = { 'BufRead', 'BufNewFile' },
   },
-  -- 'jose-elias-alvarez/null-ls.nvim', -- Linting and formatting
-
+  {
+    'sheerun/vim-polyglot'
+  },
   -- Navigation - EasyMotion
   {
     'phaazon/hop.nvim',
@@ -72,10 +73,16 @@ require('lazy').setup({
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
   },
+  -- Formatter
+  {
+    'jose-elias-alvarez/null-ls.nvim'
+  },
   -- 'glepnir/lspsaga.nvim',
   -- Autocompletion
   {
     'hrsh7th/nvim-cmp',
+    commit = "b356f2c", -- https://github.com/hrsh7th/nvim-cmp/issues/1877
+    pin = true,
     event = 'InsertEnter',
     dependencies = {
       'hrsh7th/cmp-nvim-lsp',
@@ -141,6 +148,7 @@ require('config.cmp')
 
 -- Syntax highlight
 require('config.nvim-treesitter')
+require('config.vim-polyglot')
 
 -- indent
 require("ibl").setup()
@@ -152,3 +160,5 @@ require('config.diffview')
 
 -- Notify
 require('config.noice')
+
+-- require('config.null-ls')

@@ -22,7 +22,6 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.smarttab = true
 vim.opt.softtabstop = 4
-vim.opt.termguicolors = true
 vim.opt.background = 'dark'
 
 vim.g.mapleader = ' '
