@@ -6,11 +6,11 @@ local lspconfig = require('lspconfig')
 mason.setup()
 
 mason_lspconfig.setup({
-  ensure_installed = { "lua_ls", "pyright", "tsserver" }, -- Replace these with the servers you need
+  ensure_installed = { "lua_ls", "pyright", "tsserver", "svelte" }, -- Replace these with the servers you need
   automatic_installation = true,
 })
 
-local on_attach = function(client, bufnr)
+local on_attach = function(_client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -20,6 +20,7 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
 
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', '<leader>e', '<Cmd>lua vim.diagnostic.open_float()<CR>', opts)
   -- Add more key mappings as needed
 end
 

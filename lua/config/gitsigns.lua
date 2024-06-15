@@ -36,8 +36,4 @@ require('gitsigns').setup {
   update_debounce = 100,
   status_formatter = nil,
   word_diff = false,
-  use_internal_diff = true,
 }
-
--- Keymap setup for gitsigns
--- vim.api.nvim_set_keymap('n', '<space>hu', '<cmd>lua require"gitsigns".reset_hunk()<CR>', { noremap = true, silent = true })
