@@ -78,3 +78,14 @@ vim.api.nvim_set_keymap('v', '<S-Left>', '...', { noremap = true })
 vim.api.nvim_set_keymap('v', '<S-Right>', '...', { noremap = true })
 vim.api.nvim_set_keymap('v', '<S-Up>', '...', { noremap = true })
 vim.api.nvim_set_keymap('v', '<S-Down>', '...', { noremap = true })
+
+-- Automatically reload the file if it changed outside of Neovim and notify
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter"}, {
+  command = "checktime",
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+  end,
+})

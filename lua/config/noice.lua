@@ -54,7 +54,7 @@ require('noice').setup({
     },
   },
   presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
+    bottom_search = false, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
     long_message_to_split = true, -- long messages will be sent to a split
     inc_rename = false, -- enables an input dialog for inc-rename.nvim
@@ -65,9 +65,9 @@ require('noice').setup({
   -- },
   messages = {
     enabled = true,
-    view = "mini",
+    view = "notify",
     view_warn = "mini",
-    view_error = "mini",
+    view_error = "notify",
     filter = {
       { find = "E%d+:%s+" },  -- Example regex to match error messages
     },
@@ -88,7 +88,9 @@ require('noice').setup({
   },
   notify = {
     enabled = true,
-    view = "notify"
+    view = "notify",
+    replace = true,
+    merge = true
   },
   redirect = {
     view = "popup",
@@ -106,23 +108,58 @@ require('noice').setup({
         height = "auto",
       },
     },
-    -- popupmenu = {
-    --   relative = "editor", -- Position relative to the editor window
-    --   position = {
-    --     row = "90%", -- Position the popup menu below the cmdline popup
-    --     col = "50%", -- Centered horizontally
+    popupmenu = {
+      relative = "editor",
+      position = {
+        row = 8,
+        col = "50%",
+      },
+      size = {
+        width = 60,
+        height = 10,
+      },
+      border = {
+        style = "rounded",
+        padding = { 0, 1 },
+      },
+      win_options = {
+        winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+      },
+    },
+  },
+  routes = {
+    {
+      filter = {
+        event = "msg_show",
+        kind = "",  -- This filters only echo messages.
+        find = "written",
+      },
+      view = "mini",
+    },
+    {
+      filter = {
+        event = "msg_show",
+        kind = "search_count",
+      },
+      opts = { skip = true },
+    },
+    {
+      filter = {
+        event = "msg_show",
+        kind = "",
+      },
+      opts = { skip = true },
+    },
+    -- {
+    --   filter = {
+    --     event = "msg_show",
+    --     kind = "echo",
+    --     pattern = "Pattern not found",  -- Adjust the pattern if needed
     --   },
-    --   size = {
-    --     width = "auto",
-    --     height = "auto",
-    --   },
-    --   border = {
-    --     style = "rounded",
-    --     padding = { 0, 1 },
-    --   },
-    --   win_options = {
-    --     winblend = 10,
-    --     winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+    --   view = "notify",
+    --   opts = {
+    --     replace = true,
+    --     merge = true,
     --   },
     -- },
   },

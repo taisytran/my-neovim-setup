@@ -51,7 +51,10 @@ require('lazy').setup({
     event = { 'BufRead', 'BufNewFile' },
   },
   {
-    'sheerun/vim-polyglot'
+    'sheerun/vim-polyglot',
+    init = function ()
+      vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
+    end
   },
   -- Navigation - EasyMotion
   {
@@ -119,6 +122,7 @@ require('lazy').setup({
     'szw/vim-maximizer',
     event = { 'BufRead', 'BufNewFile' },
   },
+  -- vim-floaterm
 })
 
 require('config.basic')
@@ -148,7 +152,6 @@ require('config.cmp')
 
 -- Syntax highlight
 require('config.nvim-treesitter')
-require('config.vim-polyglot')
 
 -- indent
 require("ibl").setup()
