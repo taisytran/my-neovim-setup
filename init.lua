@@ -49,6 +49,10 @@ require('lazy').setup({
   {
     'nvim-treesitter/nvim-treesitter',
     event = { 'BufRead', 'BufNewFile' },
+    build = ":TSUpdate",
+    dependencies = {
+      'windwp/nvim-ts-autotag'
+    }
   },
   {
     'sheerun/vim-polyglot',
@@ -152,6 +156,7 @@ require('config.cmp')
 
 -- Syntax highlight
 require('config.nvim-treesitter')
+require('config.nvim-ts-autotag')
 
 -- indent
 require("ibl").setup()
