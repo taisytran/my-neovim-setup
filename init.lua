@@ -52,12 +52,14 @@ require('lazy').setup({
     build = ":TSUpdate",
     dependencies = {
       'windwp/nvim-ts-autotag'
-    }
+    },
+    enabled = false
   },
   {
     'sheerun/vim-polyglot',
     init = function ()
-      vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
+      -- TODO: not working with treesitter
+      -- vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
     end
   },
   -- Navigation - EasyMotion
@@ -88,7 +90,7 @@ require('lazy').setup({
   -- Autocompletion
   {
     'hrsh7th/nvim-cmp',
-    commit = "b356f2c", -- https://github.com/hrsh7th/nvim-cmp/issues/1877
+    commit = "b356f2c", --TODO: https://github.com/hrsh7th/nvim-cmp/issues/1877
     pin = true,
     event = 'InsertEnter',
     dependencies = {
@@ -155,8 +157,8 @@ require('config.mason')
 require('config.cmp')
 
 -- Syntax highlight
-require('config.nvim-treesitter')
-require('config.nvim-ts-autotag')
+-- require('config.nvim-treesitter')
+-- require('config.nvim-ts-autotag')
 
 -- indent
 require("ibl").setup()
