@@ -67,8 +67,8 @@ require('lazy').setup({
     'phaazon/hop.nvim',
     event = 'VeryLazy'
   },
-
-  'shaunsingh/nord.nvim', -- Nord color scheme
+  -- Nord color scheme
+  'shaunsingh/nord.nvim',
 
   -- Indentation
   {
