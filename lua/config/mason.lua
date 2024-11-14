@@ -6,7 +6,7 @@ local lspconfig = require('lspconfig')
 mason.setup()
 
 mason_lspconfig.setup({
-  ensure_installed = { "lua_ls", "pyright", "tsserver", "svelte" }, -- Replace these with the servers you need
+  ensure_installed = { "lua_ls", "ts_ls", "pyright", "svelte" }, -- Replace these with the servers you need
   automatic_installation = true,
 })
 
