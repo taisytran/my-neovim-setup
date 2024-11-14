@@ -89,3 +89,11 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
   end,
 })
+
+vim.api.nvim_create_user_command('Path', function()
+  local filepath = vim.fn.expand("%:.")
+  vim.fn.setreg('+', filepath)
+  print(filepath)
+
+  require('noice').notify(filepath, 'info', { title = 'File Path (Copied)' })
+end, {})
