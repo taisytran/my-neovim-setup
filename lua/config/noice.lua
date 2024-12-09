@@ -1,4 +1,5 @@
 require('noice').setup({
+  stages = 'static',
   lsp = {
     progress = {
       enabled = true,
@@ -164,3 +165,17 @@ require('noice').setup({
     -- },
   },
 })
+
+function bookmark_notify(mark)
+  vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = 'Bookmark'})
+end
+
+for char = 97, 122 do
+  local key = string.char(char)
+  vim.api.nvim_set_keymap(
+    "n",
+    "m" .. key,
+    ":lua bookmark_notify('" .. key .. "')<CR>m" .. key,
+    { noremap = true, silent = true }
+  )
+end

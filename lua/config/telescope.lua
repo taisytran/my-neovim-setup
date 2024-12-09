@@ -8,7 +8,8 @@ require('telescope').setup{
       '--with-filename',
       '--line-number',
       '--column',
-      '--smart-case'
+      '--smart-case',
+      '--follow',
     },
     prompt_prefix = "> ",
     selection_caret = "> ",
@@ -48,6 +49,7 @@ require('telescope').setup{
   },
   pickers = {
     find_files = {
+      find_command = { "rg", "--files", "--hidden", "--no-ignore", "--follow", "--glob", "!**/.git/*", "--glob", "!**/log/*", "--glob", "!**/node_modules/*" },
       theme = "dropdown",
       layout_strategy = "horizontal",
       layout_config = {
@@ -59,6 +61,9 @@ require('telescope').setup{
       sorting_strategy = "descending",
     },
     buffers = {
+      ignore_current_buffer = false,
+      show_all_buffers = true,
+      sort_lastused = true,
       theme = "dropdown",
       layout_strategy = "horizontal",
       layout_config = {
@@ -91,13 +96,41 @@ require('telescope').setup{
       },
       sorting_strategy = "descending",
     },
+    marks = {
+      theme = "dropdown",
+      layout_strategy = "horizontal",
+      layout_config = {
+        width = 0.9,
+        height = 0.8,
+        preview_width = 0.5,
+        prompt_position = "bottom",
+      },
+      sorting_strategy = "descending",
+      attach_mappings = function(prompt_bufnr, map)
+        map("i", "<C-d>", function()
+          require("telescope.actions").delete_mark(prompt_bufnr)
+        end)
+        return true -- Keep default mappings as well as the custom ones
+      end,
+    },
+    oldfiles = {
+      theme = "dropdown",
+      layout_strategy = "horizontal",
+      layout_config = {
+        width = 0.9,
+        height = 0.8,
+        preview_width = 0.5,
+        prompt_position = "bottom",
+      },
+      sorting_strategy = "descending",
+    },
   },
   extensions = {
     fzf = {
       fuzzy = true,                    -- false will only do exact matching
       override_generic_sorter = true,  -- override the generic sorter
       override_file_sorter = true,     -- override the file sorter
-      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+      case_mode = "ignore_case",        -- or "ignore_case" or "respect_case"
     }
   }
 }
@@ -109,4 +142,5 @@ require('telescope').load_extension('fzf')
 vim.api.nvim_set_keymap('n', '<C-p>', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>p', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true })
-
+vim.api.nvim_set_keymap('n', '<leader>m', '<cmd>Telescope marks<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>o', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true })

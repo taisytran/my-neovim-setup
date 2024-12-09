@@ -23,6 +23,11 @@ require('lazy').setup({
     dependencies = 'nvim-telescope/telescope.nvim'
   },
 
+  -- {
+  --   'pbogut/fzf-mru.vim',
+  --   requires = { 'nvim-telescope/telescope-fzf-native.nvim' }
+  -- },
+
   -- Statusline
   {
     'hoob3rt/lualine.nvim',
@@ -53,15 +58,15 @@ require('lazy').setup({
     dependencies = {
       'windwp/nvim-ts-autotag'
     },
-    enabled = false
+    enabled = true
   },
-  {
-    'sheerun/vim-polyglot',
-    init = function ()
-      -- TODO: not working with treesitter
-      -- vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
-    end
-  },
+  -- {
+  --   'sheerun/vim-polyglot',
+  --   init = function ()
+  --     -- TODO: not working with treesitter
+  --     -- vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
+  --   end
+  -- },
   -- Navigation - EasyMotion
   {
     'phaazon/hop.nvim',
@@ -117,8 +122,11 @@ require('lazy').setup({
     event = 'VeryLazy',
     dependencies = {
       'MunifTanjim/nui.nvim',
-      'rcarriga/nvim-notify',
-    },
+      {
+        'rcarriga/nvim-notify',
+        commit = 'a5af69dc4866e85f2aeeccf309444eb811bb96cc',
+      }
+    }
   },
   {
     'sindrets/diffview.nvim',
@@ -128,47 +136,77 @@ require('lazy').setup({
     'szw/vim-maximizer',
     event = { 'BufRead', 'BufNewFile' },
   },
-  -- vim-floaterm
+
+  -- startup
+  {
+    'goolord/alpha-nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+
+  -- marks
+  {
+    "chentoast/marks.nvim",
+  },
+
+  -- tab
+  {
+    'alvarosevilla95/luatab.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function ()
+      require('luatab').setup{}
+    end
+  }
+  -- {
+  --   'akinsho/bufferline.nvim',
+  -- }
 })
 
 require('config.basic')
 require('config.theme')
-
--- Set keymap for Ctrl-w o to toggle maximizer
+--
+-- -- Set keymap for Ctrl-w o to toggle maximizer
 require('config.zoom')
-
--- -- statusline
+--
+-- -- -- statusline
 require('config.lualine')
-
--- Nerd comment
+--
+-- -- Nerd comment
 require('config.comment')
-
--- EasyMotion configuration for Hop.nvim
+--
+-- -- EasyMotion configuration for Hop.nvim
 require('config.hop')
-
--- Nvim-tree settings - Nerd Tree
+--
+-- -- Nvim-tree settings - Nerd Tree
 require('config.nvim-tree')
-
--- Telescope - find files
+--
+-- -- Telescope - find files
 require('config.telescope')
-
--- LSP
+--
+-- -- LSP
 require('config.mason')
 require('config.cmp')
-
--- Syntax highlight
--- require('config.nvim-treesitter')
--- require('config.nvim-ts-autotag')
-
--- indent
-require("ibl").setup()
-
--- Git
+--
+-- -- Syntax highlight
+require('config.nvim-treesitter')
+require('config.nvim-ts-autotag')
+--
+-- -- indent
+require("config.ibl")
+--
+-- -- Git
 require('config.gitsigns')
 require('config.vim-fugitive')
 require('config.diffview')
-
--- Notify
+--
+-- -- Notify
 require('config.noice')
+--
+-- -- require('config.null-ls')
 
--- require('config.null-ls')
+-- -- Startup
+require('config.alpha')
+
+-- -- Bookmarks
+require('config.marks')
+
+-- require('config.bufferline')
