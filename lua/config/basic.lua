@@ -97,3 +97,5 @@ vim.api.nvim_create_user_command('Path', function()
 
   require('noice').notify(filepath, 'info', { title = 'File Path (Copied)' })
 end, {})
+
+vim.api.nvim_set_keymap('n', '<S-Tab>', ':tabnext<CR>', { noremap = true, silent = true })

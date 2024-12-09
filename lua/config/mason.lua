@@ -60,3 +60,11 @@ mason_lspconfig.setup_handlers {
   end,
   -- Add specific handlers for other LSP servers if needed
 }
+
+
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
