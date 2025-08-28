@@ -1,5 +1,5 @@
 -- telescope
-require('telescope').setup{
+require('telescope').setup {
   defaults = {
     vimgrep_arguments = {
       'rg',
@@ -10,6 +10,16 @@ require('telescope').setup{
       '--column',
       '--smart-case',
       '--follow',
+      '--glob', '!**/node_modules/**',
+      '--glob', '!**/.yarn/**',
+      '--glob', '!package-lock.json',
+      '--glob', '!**/.git/**',
+      '--glob', '!**/.next/**',
+      '--glob', '!**/.turbo/**',
+      '--glob', '!**/coverage/**',
+      '--glob', '!**/dist/**',
+      '--glob', '!yarn.lock',
+      '--glob', '!**/build/**',
     },
     prompt_prefix = "> ",
     selection_caret = "> ",
@@ -32,20 +42,20 @@ require('telescope').setup{
       height = 0.8,
       preview_cutoff = 120,
     },
-    file_sorter = require'telescope.sorters'.get_fuzzy_file,
+    file_sorter = require 'telescope.sorters'.get_fuzzy_file,
     file_ignore_patterns = {},
-    generic_sorter = require'telescope.sorters'.get_generic_fuzzy_sorter,
+    generic_sorter = require 'telescope.sorters'.get_generic_fuzzy_sorter,
     path_display = {},
     winblend = 0,
     border = {},
-    borderchars = {'|', '|', '-', '-', '+', '+', '+', '+'},
+    borderchars = { '|', '|', '-', '-', '+', '+', '+', '+' },
     color_devicons = true,
     use_less = true,
     set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker,
+    file_previewer = require 'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require 'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require 'telescope.previewers'.vim_buffer_qflist.new,
+    buffer_previewer_maker = require 'telescope.previewers'.buffer_previewer_maker,
   },
   pickers = {
     find_files = {
@@ -127,10 +137,10 @@ require('telescope').setup{
   },
   extensions = {
     fzf = {
-      fuzzy = true,                    -- false will only do exact matching
-      override_generic_sorter = true,  -- override the generic sorter
-      override_file_sorter = true,     -- override the file sorter
-      case_mode = "ignore_case",        -- or "ignore_case" or "respect_case"
+      fuzzy = true,                   -- false will only do exact matching
+      override_generic_sorter = true, -- override the generic sorter
+      override_file_sorter = true,    -- override the file sorter
+      case_mode = "ignore_case",      -- or "ignore_case" or "respect_case"
     }
   }
 }
