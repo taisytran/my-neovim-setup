@@ -10,17 +10,22 @@ local function my_on_attach(bufnr)
 
   -- Custom mappings
   vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split')) -- Custom mapping for vertical split
-  vim.keymap.set('n', '-', ':NvimTreeToggle<CR>', opts('Toggle NvimTree')) -- Custom mapping to toggle NvimTree
-  vim.keymap.set('n', '<S-R>', api.tree.reload, opts('Reload')) -- Custom mapping for Shift + R to reload
-  vim.keymap.set('n', 't', api.node.open.tab, opts('Open: New Tab')) -- Open file in new tab
+  vim.keymap.set('n', '-', ':NvimTreeToggle<CR>', opts('Toggle NvimTree'))       -- Custom mapping to toggle NvimTree
+  vim.keymap.set('n', '<S-R>', api.tree.reload, opts('Reload'))                  -- Custom mapping for Shift + R to reload
+  vim.keymap.set('n', 't', api.node.open.tab, opts('Open: New Tab'))             -- Open file in new tab
   -- vim.keymap.set('n', 't', api.node.open.edit, opts('Open File: Keep NvimTree')) -- Open file in new tab
+  vim.keymap.set('n', 'I', function()
+    api.tree.toggle_hidden_filter()
+    api.tree.toggle_custom_filter({})
+    api.tree.toggle_gitignore_filter()
+  end, opts("Toggle Dotfiles"))
 end
 
 -- Configure nvim-tree
-require'nvim-tree'.setup {
-  on_attach = my_on_attach, -- Use custom on_attach function
-  disable_netrw       = true,
-  hijack_netrw        = true,
+require 'nvim-tree'.setup {
+  on_attach            = my_on_attach, -- Use custom on_attach function
+  disable_netrw        = true,
+  hijack_netrw         = true,
   auto_reload_on_write = true,
   -- update_cwd          = true,
   -- diagnostics = {
@@ -33,15 +38,17 @@ require'nvim-tree'.setup {
   --     error = "",
   --   },
   -- },
-  filters = {
-    dotfiles = false,
+  filters              = {
+    dotfiles = true,
+    custom = { "node_modules", "^.git$", "yarn.lock", "package-lock.json" },
+    git_ignored = true,
   },
-  git = {
+  git                  = {
     enable = true,
     ignore = true,
     timeout = 500,
   },
-  renderer = {
+  renderer             = {
     root_folder_label = false,
     highlight_git = true,
     icons = {

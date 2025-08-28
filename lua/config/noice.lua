@@ -1,5 +1,5 @@
-require('noice').setup({
-  stages = 'static',
+require("noice").setup({
+  stages = "static",
   lsp = {
     progress = {
       enabled = true,
@@ -22,8 +22,8 @@ require('noice').setup({
     hover = {
       enabled = true,
       silent = false, -- set to true to not show a message if hover is not available
-      view = nil, -- when nil, use defaults from documentation
-      opts = {}, -- merged with defaults from documentation
+      view = nil,     -- when nil, use defaults from documentation
+      opts = {},      -- merged with defaults from documentation
     },
     signature = {
       enabled = true,
@@ -31,15 +31,16 @@ require('noice').setup({
         enabled = true,
         trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
         luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
-        throttle = 50, -- Debounce lsp signature help request by 50ms
+        throttle = 50,  -- Debounce lsp signature help request by 50ms
       },
-      view = nil, -- when nil, use defaults from documentation
-      opts = {}, -- merged with defaults from documentation
+      view = nil,       -- when nil, use defaults from documentation
+      opts = {},        -- merged with defaults from documentation
     },
     message = {
       -- Messages shown by lsp servers
       enabled = true,
       view = "notify",
+      -- view = "mini",
       opts = {},
     },
     -- defaults for hover and signature help
@@ -55,22 +56,22 @@ require('noice').setup({
     },
   },
   presets = {
-    bottom_search = false, -- use a classic bottom cmdline for search
-    command_palette = true, -- position the cmdline and popupmenu together
+    bottom_search = false,        -- use a classic bottom cmdline for search
+    command_palette = true,       -- position the cmdline and popupmenu together
     long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false, -- add a border to hover docs and signature help
+    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false,       -- add a border to hover docs and signature help
   },
   -- cmdline = {
   --   view = "cmdline", -- Use the default cmdline view at the bottom
   -- },
   messages = {
     enabled = true,
-    view = "notify",
+    view = "mini",
     view_warn = "mini",
-    view_error = "notify",
+    view_error = "mini",
     filter = {
-      { find = "E%d+:%s+" },  -- Example regex to match error messages
+      { find = "E%d+:%s+" },   -- Example regex to match error messages
     },
   },
   -- messages = {
@@ -91,7 +92,7 @@ require('noice').setup({
     enabled = true,
     view = "notify",
     replace = true,
-    merge = true
+    merge = true,
   },
   redirect = {
     view = "popup",
@@ -101,8 +102,8 @@ require('noice').setup({
   views = {
     cmdline_popup = {
       position = {
-        row = "50%", -- Position at the bottom
-        col = "50%", -- Centered horizontally
+        row = "50%",     -- Position at the bottom
+        col = "50%",     -- Centered horizontally
       },
       size = {
         width = "auto",
@@ -132,7 +133,7 @@ require('noice').setup({
     {
       filter = {
         event = "msg_show",
-        kind = "",  -- This filters only echo messages.
+        kind = "",     -- This filters only echo messages.
         find = "written",
       },
       view = "mini",
@@ -167,7 +168,7 @@ require('noice').setup({
 })
 
 function bookmark_notify(mark)
-  vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = 'Bookmark'})
+  vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = "Bookmark" })
 end
 
 for char = 97, 122 do
