@@ -1,5 +1,9 @@
+-- Bufferline configuration
+-- Navigation: <S-Tab> to cycle next, <Tab>q to pick close
+
 require("bufferline").setup({
   options = {
+    mode = "buffers",
     offsets = {
       {
         filetype = "NvimTree",
@@ -9,14 +13,11 @@ require("bufferline").setup({
       }
     },
     separator_style = "slant",
-    -- diagnostics = "nvim_lsp",
     diagnostics = false,
   }
 })
 
-
-vim.api.nvim_set_keymap('n', '<S-Tab>', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Tab>q', ':BufferLinePickClose<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Tab>c', ':BufferLineCloseOthers<CR>', { noremap = true, silent = true })
-
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCycleNext<cr>', opts)
+vim.keymap.set('n', '<Tab>q', '<cmd>BufferLinePickClose<cr>', opts)
+vim.keymap.set('n', '<Tab>c', '<cmd>BufferLineCloseOthers<cr>', opts)

@@ -1,25 +1,25 @@
-vim.api.nvim_set_keymap('n', '<C-w>w', ':MaximizerToggle<CR>', { noremap = true, silent = true })
+-- Native Lua Window Zoom (Replacing vim-maximizer)
+-- Keybind: <C-w>w to toggle maximize window
 
--- Ensure the vim-maximizer plugin is loaded
--- vim.cmd [[packadd vim-maximizer]]
+local function toggle_zoom()
+    if vim.t.maximized_window then
+        -- Restore
+        vim.api.nvim_set_current_win(vim.t.maximized_window)
+        vim.cmd("tabclose")
+        vim.t.maximized_window = nil
+        vim.notify("Zoom Out (Restored)", vim.log.levels.INFO, { title = "Window Zoom" })
+    else
+        -- Maximize using a temporary tab
+        local cur_win = vim.api.nvim_get_current_win()
+        local cur_buf = vim.api.nvim_get_current_buf()
+        local cursor = vim.api.nvim_win_get_cursor(cur_win)
+        
+        vim.cmd("tabedit %")
+        vim.t.maximized_window = cur_win
+        vim.api.nvim_win_set_cursor(0, cursor)
+        
+        vim.notify("Zoom In (Maximized)", vim.log.levels.INFO, { title = "Window Zoom" })
+    end
+end
 
--- Initialize the zoom state
--- _G.is_maximized = false
---
--- -- Function to toggle zoom in and out and trigger a notification
--- function _G.toggle_maximize()
---   if _G.is_maximized then
---     vim.cmd('MaximizerToggle')
---     _G.is_maximized = false
---     -- Trigger Noice notification for zoom out
---     vim.notify("Zoom out", "info", {title = "Vim Maximizer"})
---   else
---     vim.cmd('MaximizerToggle')
---     _G.is_maximized = true
---     -- Trigger Noice notification for zoom in
---     vim.notify("Zoom in", "info", {title = "Vim Maximizer"})
---   end
--- end
---
--- -- Set keymap for Ctrl-w o to toggle maximizer
--- vim.api.nvim_set_keymap('n', '<C-w>w', ':lua _G.toggle_maximize()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-w>w', toggle_zoom, { noremap = true, silent = true, desc = "Toggle window zoom" })

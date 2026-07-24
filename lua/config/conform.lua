@@ -11,6 +11,7 @@ conform.setup({
 		json = { "prettier" },
 		html = { "prettier" },
 		css = { "prettier" },
+		svelte = { "prettier" },
 		yaml = { "prettier" },
 		markdown = { "prettier" },
 		python = { "black" },
