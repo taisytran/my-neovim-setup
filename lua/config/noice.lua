@@ -168,7 +168,9 @@ require("noice").setup({
 })
 
 function bookmark_notify(mark)
-  vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = "Bookmark" })
+  vim.schedule(function()
+    vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = "Bookmark" })
+  end)
 end
 
 for char = 97, 122 do

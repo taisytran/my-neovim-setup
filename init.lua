@@ -1,19 +1,31 @@
 -- init.lua
-vim.opt.runtimepath:prepend("~/.local/share/nvim/lazy/lazy.nvim")
+if vim.loader then
+	vim.loader.enable()
+end
+
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
+vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
 	-- Core dependencies
 	"nvim-lua/plenary.nvim",
 
-	-- Impatient plugin to improve startup time
-	"lewis6991/impatient.nvim",
-
-	-- 'kylechui/nvim-surround', -- Surround text objects easily
 	-- File Explorer
 	{
-		"kyazdani42/nvim-tree.lua", -- File system explorer
+		"nvim-tree/nvim-tree.lua",
 		cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
-		dependencies = "kyazdani42/nvim-web-devicons",
+		dependencies = "nvim-tree/nvim-web-devicons",
 	},
 
 	-- Fuzzy Finder
@@ -23,17 +35,11 @@ require("lazy").setup({
 		dependencies = "nvim-telescope/telescope.nvim",
 	},
 
-	-- {
-	--   'pbogut/fzf-mru.vim',
-	--   requires = { 'nvim-telescope/telescope-fzf-native.nvim' }
-	-- },
-
 	-- Statusline
 	{
-		"hoob3rt/lualine.nvim",
+		"nvim-lualine/lualine.nvim",
 		event = "VeryLazy",
 	},
-	-- 'lewis6991/gitsigns.nvim', -- Git diff in sign column
 
 	-- Git integration
 	{
@@ -43,12 +49,10 @@ require("lazy").setup({
 
 	{
 		"lewis6991/gitsigns.nvim",
-		requires = {
-			"nvim-lua/plenary.nvim",
-		},
+		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 
-	"numToStr/Comment.nvim", -- Commenting utility
+	"numToStr/Comment.nvim",
 
 	-- Syntax highlighting
 	{
@@ -58,66 +62,52 @@ require("lazy").setup({
 		dependencies = {
 			"windwp/nvim-ts-autotag",
 		},
-		enabled = true,
 	},
-	-- {
-	--   'sheerun/vim-polyglot',
-	--   init = function ()
-	--     -- TODO: not working with treesitter
-	--     -- vim.g.polyglot_disabled = { "regex", "bash", "css", "html", "javascript", "json", "lua", "python", "ruby", "typescript", "yaml" }
-	--   end
-	-- },
-	-- Navigation - EasyMotion
-	{
-		"phaazon/hop.nvim",
-		event = "VeryLazy",
-	},
-	-- Nord color scheme
-	"shaunsingh/nord.nvim",
 
-	-- Indentation
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = "BufRead",
-	},
+	-- Nord color scheme
+	"gbprod/nord.nvim",
 
 	-- LSP Configuration
 	{
-		"mason-org/mason.nvim",
-		-- { "mason-org/mason-lspconfig.nvim", version = "v1.32.0" },
-		"mason-org/mason-lspconfig.nvim",
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
 		"neovim/nvim-lspconfig",
 	},
+
 	-- Formatter
 	{
-		-- archived
-		-- 'jose-elias-alvarez/null-ls.nvim'
 		"stevearc/conform.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 	},
-	-- 'glepnir/lspsaga.nvim',
-	-- Autocompletion
+
+	-- Autocompletion (Upgraded to blink.cmp)
 	{
-		"hrsh7th/nvim-cmp",
-		commit = "b356f2c", --TODO: https://github.com/hrsh7th/nvim-cmp/issues/1877
-		pin = true,
-		event = "InsertEnter",
+		"saghen/blink.cmp",
+		version = "*",
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/vim-vsnip",
-			"hrsh7th/cmp-vsnip",
 			"rafamadriz/friendly-snippets",
-			"onsails/lspkind-nvim",
 		},
 	},
 
 	-- modify multiple lines
 	{
 		"mg979/vim-visual-multi",
-		event = "BufRead", -- load when open file
+		event = "BufRead",
+	},
+
+	-- Snacks.nvim (Modern Dashboard, Indent, Zen, etc.)
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		-- config is moved to lua/config/snacks.lua
+	},
+
+	-- which-key
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {},
 	},
 
 	-- notice
@@ -127,93 +117,45 @@ require("lazy").setup({
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"rcarriga/nvim-notify",
-			-- {
-			-- "rcarriga/nvim-notify",
-			-- commit = "a5af69dc4866e85f2aeeccf309444eb811bb96cc",
-			-- },
 		},
 	},
+
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
 	},
+
+	-- tab & bufferline
 	{
-		"szw/vim-maximizer",
-		event = { "BufRead", "BufNewFile" },
+		"akinsho/bufferline.nvim",
+		version = "*",
+		dependencies = "nvim-tree/nvim-web-devicons",
 	},
 
-	-- startup
+	-- Marks
 	{
-		"goolord/alpha-nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		"chentoast/marks.nvim",
+		event = "VeryLazy",
 	},
-
-	-- marks
-	-- {
-	--   "chentoast/marks.nvim",
-	-- },
-
-	-- tab
-	{
-		"alvarosevilla95/luatab.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("luatab").setup({})
-		end,
-	},
-	-- {
-	--   'akinsho/bufferline.nvim',
-	-- }
 })
 
+-- Load configurations
 require("config.basic")
 require("config.theme")
---
--- -- Set keymap for Ctrl-w o to toggle maximizer
 require("config.zoom")
---
--- -- -- statusline
 require("config.lualine")
---
--- -- Nerd comment
 require("config.comment")
---
--- -- EasyMotion configuration for Hop.nvim
-require("config.hop")
---
--- -- Nvim-tree settings - Nerd Tree
 require("config.nvim-tree")
---
--- -- Telescope - find files
 require("config.telescope")
---
--- -- LSP
 require("config.mason")
-require("config.cmp")
---
--- -- Syntax highlight
+require("config.blink")
 require("config.nvim-treesitter")
 require("config.nvim-ts-autotag")
---
--- -- indent
-require("config.ibl")
---
--- -- Git
 require("config.gitsigns")
 require("config.vim-fugitive")
 require("config.diffview")
---
--- -- Notify
 require("config.noice")
-
--- -- Formatter
--- -- require('config.null-ls')
 require("config.conform")
-
--- -- Startup
-require("config.alpha")
-
--- -- Bookmarks
--- require('config.marks')
-
--- require('config.bufferline')
+require("config.bufferline")
+require("config.marks")
+require("config.snacks") -- New config file

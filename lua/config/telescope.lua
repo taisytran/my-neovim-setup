@@ -26,7 +26,7 @@ require('telescope').setup {
     entry_prefix = "  ",
     initial_mode = "insert",
     selection_strategy = "reset",
-    sorting_strategy = "descending",
+    sorting_strategy = "ascending",
     layout_strategy = "horizontal",
     layout_config = {
       horizontal = {
@@ -43,7 +43,37 @@ require('telescope').setup {
       preview_cutoff = 120,
     },
     file_sorter = require 'telescope.sorters'.get_fuzzy_file,
-    file_ignore_patterns = {},
+    file_ignore_patterns = { "%.next/", "node_modules/", "%.git/" },
+    tiebreak = function(current_entry, existing_entry, _)
+      local function get_p(e)
+        return e.path or e.filename or e.value or ""
+      end
+      local p1 = get_p(current_entry)
+      local p2 = get_p(existing_entry)
+
+      -- Since sorting_strategy is "ascending" (bottom-up), 
+      -- we want the "best" files to have a HIGHER index (return false to keep current_entry above/before existing)
+      -- or rather, the tiebreak returns true if current_entry is BETTER than existing_entry.
+      -- In ascending mode, BETTER entries should be at the BOTTOM.
+      
+      -- 1. Prioritize src/ (Better files -> Return FALSE so they stay below)
+      local s1 = p1:match("^src/") or p1:match("/src/")
+      local s2 = p2:match("^src/") or p2:match("/src/")
+      if s1 and not s2 then return false end
+      if s2 and not s1 then return true end
+
+      -- 2. De-prioritize junk (Worse files -> Return TRUE so they stay above)
+      local function is_junk(p)
+        return p:match("%.md$") or p:match("%.txt$") or p:match("%.log$")
+      end
+      local j1 = is_junk(p1)
+      local j2 = is_junk(p2)
+      if not j1 and j2 then return false end
+      if j1 and not j2 then return true end
+
+      -- 3. Shorter path is "better" -> Return FALSE to stay below
+      return #p1 > #p2
+    end,
     generic_sorter = require 'telescope.sorters'.get_generic_fuzzy_sorter,
     path_display = {},
     winblend = 0,
@@ -59,7 +89,7 @@ require('telescope').setup {
   },
   pickers = {
     find_files = {
-      find_command = { "rg", "--files", "--hidden", "--no-ignore", "--follow", "--glob", "!**/.git/*", "--glob", "!**/log/*", "--glob", "!**/node_modules/*" },
+      find_command = { "rg", "--files", "--hidden", "--follow", "--glob", "!**/.git/*", "--glob", "!**/.next/*" },
       theme = "dropdown",
       layout_strategy = "horizontal",
       layout_config = {
@@ -139,7 +169,7 @@ require('telescope').setup {
     fzf = {
       fuzzy = true,                   -- false will only do exact matching
       override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true,    -- override the file sorter
+      override_file_sorter = false,    -- disable override to let tiebreak work better
       case_mode = "ignore_case",      -- or "ignore_case" or "respect_case"
     }
   }

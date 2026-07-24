@@ -1,11 +1,20 @@
 -- Configure lualine
 require('lualine').setup {
   options = {
-    theme = 'nord'
+    theme = 'nord',
+    component_separators = { left = '│', right = '│' },
+    section_separators = { left = '', right = '' },
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {'branch'},
+    lualine_b = {
+      'branch',
+      {
+        'diff',
+        symbols = { added = ' ', modified = ' ', removed = ' ' },
+      },
+      'diagnostics',
+    },
     lualine_c = {
       { 'filename', path = 1 }
     },
@@ -22,5 +31,5 @@ require('lualine').setup {
     lualine_z = {}
   },
   tabline = {},
-  extensions = {}
+  extensions = {'nvim-tree', 'fugitive'}
 }

@@ -1,11 +1,12 @@
 -- config/gitsigns.lua
 require('gitsigns').setup {
   signs = {
-    add          = { text = '│' },
-    change       = { text = '│' },
-    delete       = { text = '_' },
-    topdelete    = { text = '‾' },
-    changedelete = { text = '~' },
+    add          = { text = '▎' },
+    change       = { text = '▎' },
+    delete       = { text = '' },
+    topdelete    = { text = '' },
+    changedelete = { text = '▎' },
+    untracked    = { text = '▎' },
   },
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
@@ -16,8 +17,36 @@ require('gitsigns').setup {
       vim.keymap.set(mode, l, r, opts)
     end
 
-    -- Custom mappings
-    map('n', '<leader>hu', gs.reset_hunk, { desc = "Reset Hunk" }) -- Leader + hu to reset hunk
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, { expr = true, desc = "Next Hunk" })
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, { expr = true, desc = "Prev Hunk" })
+
+    -- Actions
+    map('n', '<leader>hs', gs.stage_hunk, { desc = "Stage Hunk" })
+    map('n', '<leader>hr', gs.reset_hunk, { desc = "Reset Hunk" })
+    map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Stage Hunk" })
+    map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Reset Hunk" })
+    map('n', '<leader>hS', gs.stage_buffer, { desc = "Stage Buffer" })
+    map('n', '<leader>hu', gs.undo_stage_hunk, { desc = "Undo Stage Hunk" })
+    map('n', '<leader>hR', gs.reset_buffer, { desc = "Reset Buffer" })
+    map('n', '<leader>hp', gs.preview_hunk, { desc = "Preview Hunk" })
+    map('n', '<leader>hb', function() gs.blame_line{full=true} end, { desc = "Blame Line" })
+    map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = "Toggle Blame" })
+    map('n', '<leader>hd', gs.diffthis, { desc = "Diff This" })
+    map('n', '<leader>hD', function() gs.diffthis('~') end, { desc = "Diff This (previous)" })
+    map('n', '<leader>td', gs.toggle_deleted, { desc = "Toggle Deleted" })
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = "Select Hunk" })
   end,
   watch_gitdir = {
     interval = 1000,
@@ -29,26 +58,9 @@ require('gitsigns').setup {
     virt_text_pos = 'eol',
     delay = 1000,
   },
-  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+  current_line_blame_formatter = ' <author>, <author_time:%Y-%m-%d> - <summary>',
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil,
   word_diff = false,
 }
-
--- Define highlights for GitSigns
-vim.api.nvim_set_hl(0, 'GitSignsAdd', { link = 'GitGutterAdd' })
-vim.api.nvim_set_hl(0, 'GitSignsAddNr', { link = 'GitGutterAdd' })
-vim.api.nvim_set_hl(0, 'GitSignsAddLn', { link = 'GitGutterAdd' })
-vim.api.nvim_set_hl(0, 'GitSignsChange', { link = 'GitGutterChange' })
-vim.api.nvim_set_hl(0, 'GitSignsChangeNr', { link = 'GitGutterChange' })
-vim.api.nvim_set_hl(0, 'GitSignsChangeLn', { link = 'GitGutterChange' })
-vim.api.nvim_set_hl(0, 'GitSignsDelete', { link = 'GitGutterDelete' })
-vim.api.nvim_set_hl(0, 'GitSignsDeleteNr', { link = 'GitGutterDelete' })
-vim.api.nvim_set_hl(0, 'GitSignsDeleteLn', { link = 'GitGutterDelete' })
-vim.api.nvim_set_hl(0, 'GitSignsTopdelete', { link = 'GitGutterDeleteChange' })
-vim.api.nvim_set_hl(0, 'GitSignsTopdeleteNr', { link = 'GitGutterDeleteChange' })
-vim.api.nvim_set_hl(0, 'GitSignsTopdeleteLn', { link = 'GitGutterDeleteChange' })
-vim.api.nvim_set_hl(0, 'GitSignsChangedelete', { link = 'GitGutterChangeDelete' })
-vim.api.nvim_set_hl(0, 'GitSignsChangedeleteNr', { link = 'GitGutterChangeDelete' })
-vim.api.nvim_set_hl(0, 'GitSignsChangedeleteLn', { link = 'GitGutterChangeDelete' })
