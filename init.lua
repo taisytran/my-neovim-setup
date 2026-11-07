@@ -1,11 +1,13 @@
--- init.lua
+-- Load editor options and the leader before plugins register their mappings.
+require("config.basic")
+require("config.zoom")
+
 if vim.loader then
 	vim.loader.enable()
 end
 
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
@@ -17,145 +19,144 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-require("lazy").setup({
-	-- Core dependencies
-	"nvim-lua/plenary.nvim",
+local function configure(name)
+	return function()
+		require("config." .. name)
+	end
+end
 
-	-- File Explorer
+require("lazy").setup({
+	"nvim-lua/plenary.nvim",
+	{
+		"gbprod/nord.nvim",
+		lazy = false,
+		priority = 1000,
+		config = configure("theme"),
+	},
+	{
+		"folke/snacks.nvim",
+		lazy = false,
+		priority = 1000,
+		config = configure("snacks"),
+	},
 	{
 		"nvim-tree/nvim-tree.lua",
 		cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
+		keys = {
+			{ "-", "<cmd>NvimTreeToggle<cr>", desc = "Toggle file explorer" },
+			{ "<leader>N", "<cmd>NvimTreeFindFile<cr>", desc = "Find current file" },
+		},
 		dependencies = "nvim-tree/nvim-web-devicons",
+		config = configure("nvim-tree"),
 	},
-
-	-- Fuzzy Finder
 	{
-		"nvim-telescope/telescope-fzf-native.nvim",
-		build = "make",
-		dependencies = "nvim-telescope/telescope.nvim",
+		"nvim-telescope/telescope.nvim",
+		cmd = "Telescope",
+		keys = {
+			{ "<C-p>", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+			{ "<leader>p", "<cmd>Telescope buffers<cr>", desc = "Find buffers" },
+			{ "<leader>f", "<cmd>Telescope live_grep<cr>", desc = "Find text" },
+			{ "<leader>m", "<cmd>Telescope marks<cr>", desc = "Find marks" },
+			{ "<leader>o", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
+		},
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons",
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+		},
+		config = configure("telescope"),
 	},
-
-	-- Statusline
 	{
 		"nvim-lualine/lualine.nvim",
 		event = "VeryLazy",
+		dependencies = "nvim-tree/nvim-web-devicons",
+		config = configure("lualine"),
 	},
-
-	-- Git integration
 	{
 		"tpope/vim-fugitive",
-		cmd = { "Git", "G" },
+		cmd = { "Git", "G", "Gblame" },
+		keys = { { "<leader>gb", "<cmd>Git blame<cr>", desc = "Git blame" } },
+		config = configure("vim-fugitive"),
 	},
-
 	{
 		"lewis6991/gitsigns.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		event = { "BufReadPre", "BufNewFile", "FileType" },
+		config = configure("gitsigns"),
 	},
-
-	"numToStr/Comment.nvim",
-
-	-- Syntax highlighting
+	{
+		"numToStr/Comment.nvim",
+		event = { "BufReadPost", "BufNewFile", "FileType" },
+		config = configure("comment"),
+	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		event = { "BufRead", "BufNewFile" },
+		lazy = false,
 		build = ":TSUpdate",
-		dependencies = {
-			"windwp/nvim-ts-autotag",
-		},
+		config = configure("nvim-treesitter"),
 	},
-
-	-- Nord color scheme
-	"gbprod/nord.nvim",
-
-	-- LSP Configuration
 	{
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
+		"windwp/nvim-ts-autotag",
+		event = { "BufReadPost", "BufNewFile", "FileType" },
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		config = configure("nvim-ts-autotag"),
 	},
-
-	-- Formatter
+	{
+		"mason-org/mason.nvim",
+		cmd = "Mason",
+		opts = {},
+	},
+	{
+		"mason-org/mason-lspconfig.nvim",
+		event = { "BufReadPre", "BufNewFile", "FileType" },
+		dependencies = {
+			"mason-org/mason.nvim",
+			"neovim/nvim-lspconfig",
+			"saghen/blink.cmp",
+		},
+		config = configure("mason"),
+	},
 	{
 		"stevearc/conform.nvim",
-		event = { "BufReadPre", "BufNewFile" },
+		event = { "BufWritePre", "BufReadPre", "BufNewFile" },
+		keys = {
+			{ "<leader>=", mode = { "n", "x" }, desc = "Format with Conform" },
+		},
+		config = configure("conform"),
 	},
-
-	-- Autocompletion (Upgraded to blink.cmp)
 	{
 		"saghen/blink.cmp",
 		version = "*",
-		dependencies = {
-			"rafamadriz/friendly-snippets",
-		},
+		event = "InsertEnter",
+		dependencies = "rafamadriz/friendly-snippets",
+		config = configure("blink"),
 	},
-
-	-- modify multiple lines
-	{
-		"mg979/vim-visual-multi",
-		event = "BufRead",
-	},
-
-	-- Snacks.nvim (Modern Dashboard, Indent, Zen, etc.)
-	{
-		"folke/snacks.nvim",
-		priority = 1000,
-		lazy = false,
-		-- config is moved to lua/config/snacks.lua
-	},
-
-	-- which-key
-	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		opts = {},
-	},
-
-	-- notice
+	{ "mg979/vim-visual-multi", event = { "BufReadPost", "BufNewFile" } },
+	{ "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
+		dependencies = { "MunifTanjim/nui.nvim", "folke/snacks.nvim" },
+		config = configure("noice"),
 	},
-
 	{
 		"sindrets/diffview.nvim",
-		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+		cmd = {
+			"DiffviewOpen",
+			"DiffviewFileHistory",
+			"DiffviewClose",
+			"DiffviewToggleFiles",
+			"DiffviewFocusFiles",
+			"DiffviewRefresh",
+		},
+		dependencies = "nvim-lua/plenary.nvim",
+		config = configure("diffview"),
 	},
-
-	-- tab & bufferline
 	{
 		"akinsho/bufferline.nvim",
 		version = "*",
-		dependencies = "nvim-tree/nvim-web-devicons",
-	},
-
-	-- Marks
-	{
-		"chentoast/marks.nvim",
 		event = "VeryLazy",
+		dependencies = "nvim-tree/nvim-web-devicons",
+		config = configure("bufferline"),
 	},
+	{ "chentoast/marks.nvim", event = "VeryLazy", config = configure("marks") },
 })
-
--- Load configurations
-require("config.basic")
-require("config.theme")
-require("config.zoom")
-require("config.lualine")
-require("config.comment")
-require("config.nvim-tree")
-require("config.telescope")
-require("config.mason")
-require("config.blink")
-require("config.nvim-treesitter")
-require("config.nvim-ts-autotag")
-require("config.gitsigns")
-require("config.vim-fugitive")
-require("config.diffview")
-require("config.noice")
-require("config.conform")
-require("config.bufferline")
-require("config.marks")
-require("config.snacks") -- New config file

@@ -1,5 +1,4 @@
 require("noice").setup({
-  stages = "static",
   lsp = {
     progress = {
       enabled = true,
@@ -15,8 +14,6 @@ require("noice").setup({
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       -- override the lsp markdown formatter with Noice
       ["vim.lsp.util.stylize_markdown"] = true,
-      -- override cmp documentation with Noice (needs the other options to work)
-      ["cmp.entry.get_documentation"] = true,
       -- ["vim.lsp.util.open_floating_preview"] = true,
     },
     hover = {
@@ -26,7 +23,7 @@ require("noice").setup({
       opts = {},      -- merged with defaults from documentation
     },
     signature = {
-      enabled = true,
+      enabled = false,
       auto_open = {
         enabled = true,
         trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
@@ -166,19 +163,3 @@ require("noice").setup({
     -- },
   },
 })
-
-function bookmark_notify(mark)
-  vim.schedule(function()
-    vim.notify("Mark set: " .. mark, vim.log.levels.INFO, { title = "Bookmark" })
-  end)
-end
-
-for char = 97, 122 do
-  local key = string.char(char)
-  vim.api.nvim_set_keymap(
-    "n",
-    "m" .. key,
-    ":lua bookmark_notify('" .. key .. "')<CR>m" .. key,
-    { noremap = true, silent = true }
-  )
-end

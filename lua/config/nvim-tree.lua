@@ -82,7 +82,3 @@ require("nvim-tree").setup({
 		},
 	},
 })
-
--- Set the key mapping to toggle nvim-tree globally in Neovim
-vim.api.nvim_set_keymap("n", "-", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader>N", ":NvimTreeFindFile<CR>", { noremap = true, silent = true })

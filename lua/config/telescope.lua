@@ -51,28 +51,23 @@ require('telescope').setup {
       local p1 = get_p(current_entry)
       local p2 = get_p(existing_entry)
 
-      -- Since sorting_strategy is "ascending" (bottom-up), 
-      -- we want the "best" files to have a HIGHER index (return false to keep current_entry above/before existing)
-      -- or rather, the tiebreak returns true if current_entry is BETTER than existing_entry.
-      -- In ascending mode, BETTER entries should be at the BOTTOM.
-      
-      -- 1. Prioritize src/ (Better files -> Return FALSE so they stay below)
+      -- A tie-break returns true when the current entry should rank first,
+      -- independently of the picker's display direction.
       local s1 = p1:match("^src/") or p1:match("/src/")
       local s2 = p2:match("^src/") or p2:match("/src/")
-      if s1 and not s2 then return false end
-      if s2 and not s1 then return true end
+      if s1 and not s2 then return true end
+      if s2 and not s1 then return false end
 
-      -- 2. De-prioritize junk (Worse files -> Return TRUE so they stay above)
       local function is_junk(p)
         return p:match("%.md$") or p:match("%.txt$") or p:match("%.log$")
       end
       local j1 = is_junk(p1)
       local j2 = is_junk(p2)
-      if not j1 and j2 then return false end
-      if j1 and not j2 then return true end
+      if not j1 and j2 then return true end
+      if j1 and not j2 then return false end
 
-      -- 3. Shorter path is "better" -> Return FALSE to stay below
-      return #p1 > #p2
+      -- Prefer the shorter path when both entries are otherwise equivalent.
+      return #p1 < #p2
     end,
     generic_sorter = require 'telescope.sorters'.get_generic_fuzzy_sorter,
     path_display = {},
@@ -169,7 +164,7 @@ require('telescope').setup {
     fzf = {
       fuzzy = true,                   -- false will only do exact matching
       override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = false,    -- disable override to let tiebreak work better
+      override_file_sorter = true,     -- tie-breaking still applies when scores are equal
       case_mode = "ignore_case",      -- or "ignore_case" or "respect_case"
     }
   }
@@ -177,10 +172,3 @@ require('telescope').setup {
 
 -- Load the telescope-fzf-native extension
 require('telescope').load_extension('fzf')
-
-
-vim.api.nvim_set_keymap('n', '<C-p>', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>p', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>Telescope live_grep<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>m', '<cmd>Telescope marks<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>o', '<cmd>Telescope oldfiles<cr>', { noremap = true, silent = true })

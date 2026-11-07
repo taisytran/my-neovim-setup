@@ -1,12 +1,5 @@
 -- config/mason.lua
-local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
-
-mason.setup()
-
-mason_lspconfig.setup({
-	ensure_installed = { "lua_ls", "ts_ls", "pyright", "svelte" },
-})
 
 local on_attach = function(_client, bufnr)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
@@ -21,18 +14,10 @@ local function setup_server(name, config)
 	config = vim.tbl_extend("force", {
 		on_attach = on_attach,
 		flags = flags,
+		capabilities = require("blink.cmp").get_lsp_capabilities(),
 	}, config or {})
 
-	-- For Neovim 0.11+, use vim.lsp.config if available to avoid deprecation warnings
-	if vim.lsp.config then
-		vim.lsp.config[name] = config
-	else
-		-- Fallback for older versions or if lspconfig is still preferred
-		local ok, lspconfig = pcall(require, "lspconfig")
-		if ok then
-			lspconfig[name].setup(config)
-		end
-	end
+	vim.lsp.config(name, config)
 end
 
 setup_server("ts_ls")
@@ -44,6 +29,12 @@ setup_server("lua_ls", {
 			diagnostics = { globals = { "vim" } },
 		},
 	},
+})
+
+-- Enable only these servers, after their configuration is registered.
+mason_lspconfig.setup({
+	ensure_installed = { "lua_ls", "ts_ls", "pyright", "svelte" },
+	automatic_enable = { "lua_ls", "ts_ls", "pyright", "svelte" },
 })
 
 vim.diagnostic.config({
