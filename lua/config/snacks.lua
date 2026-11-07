@@ -34,7 +34,7 @@ require("snacks").setup({
       },
     },
   },
-  image = { enabled = true },
+  image = { enabled = require("snacks.image").supports_terminal() },
   indent = { enabled = true },
   notifier = { enabled = true },
   bigfile = { enabled = true },

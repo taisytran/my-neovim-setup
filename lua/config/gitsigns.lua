@@ -20,13 +20,13 @@ require('gitsigns').setup {
     -- Navigation
     map('n', ']c', function()
       if vim.wo.diff then return ']c' end
-      vim.schedule(function() gs.next_hunk() end)
+      vim.schedule(function() gs.nav_hunk("next") end)
       return '<Ignore>'
     end, { expr = true, desc = "Next Hunk" })
 
     map('n', '[c', function()
       if vim.wo.diff then return '[c' end
-      vim.schedule(function() gs.prev_hunk() end)
+      vim.schedule(function() gs.nav_hunk("prev") end)
       return '<Ignore>'
     end, { expr = true, desc = "Prev Hunk" })
 
@@ -43,13 +43,12 @@ require('gitsigns').setup {
     map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = "Toggle Blame" })
     map('n', '<leader>hd', gs.diffthis, { desc = "Diff This" })
     map('n', '<leader>hD', function() gs.diffthis('~') end, { desc = "Diff This (previous)" })
-    map('n', '<leader>td', gs.toggle_deleted, { desc = "Toggle Deleted" })
+    map('n', '<leader>td', gs.preview_hunk_inline, { desc = "Preview Hunk Inline" })
 
     -- Text object
     map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = "Select Hunk" })
   end,
   watch_gitdir = {
-    interval = 1000,
     follow_files = true
   },
   current_line_blame = true,

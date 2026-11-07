@@ -1,26 +1,33 @@
 -- config/blink.lua
 -- Modern autocompletion powered by Rust
 require("blink.cmp").setup({
-  keymap = { 
-    preset = 'default',
-    ['<CR>'] = { 'accept', 'fallback' },
-    ['<Tab>'] = { 'select_next', 'fallback' },
-    ['<S-Tab>'] = { 'select_prev', 'fallback' },
-  },
+	enabled = function()
+		return true
+	end,
 
-  appearance = {
-    use_nvim_cmp_as_default = true,
-    nerd_font_variant = 'mono'
-  },
+	keymap = {
+		preset = "default",
+		["<CR>"] = { "accept", "fallback" },
+		["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+		["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+	},
 
-  sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
-  },
+	appearance = {
+		nerd_font_variant = "mono",
+	},
 
-  signature = { enabled = true },
-  
-  completion = {
-    documentation = { auto_show = true, auto_show_delay_ms = 500 },
-    ghost_text = { enabled = true }
-  }
+	sources = {
+		default = { "lsp", "path", "snippets", "buffer" },
+	},
+
+	cmdline = {
+		enabled = false,
+	},
+
+	signature = { enabled = false },
+
+	completion = {
+		documentation = { auto_show = true, auto_show_delay_ms = 500 },
+		ghost_text = { enabled = false },
+	},
 })

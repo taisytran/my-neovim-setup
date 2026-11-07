@@ -1,25 +1,25 @@
--- Native Lua Window Zoom (Replacing vim-maximizer)
--- Keybind: <C-w>w to toggle maximize window
-
+-- Zoom the current window into a temporary tab, preserving its buffer and view.
 local function toggle_zoom()
-    if vim.t.maximized_window then
-        -- Restore
-        vim.api.nvim_set_current_win(vim.t.maximized_window)
-        vim.cmd("tabclose")
-        vim.t.maximized_window = nil
-        vim.notify("Zoom Out (Restored)", vim.log.levels.INFO, { title = "Window Zoom" })
-    else
-        -- Maximize using a temporary tab
-        local cur_win = vim.api.nvim_get_current_win()
-        local cur_buf = vim.api.nvim_get_current_buf()
-        local cursor = vim.api.nvim_win_get_cursor(cur_win)
-        
-        vim.cmd("tabedit %")
-        vim.t.maximized_window = cur_win
-        vim.api.nvim_win_set_cursor(0, cursor)
-        
-        vim.notify("Zoom In (Maximized)", vim.log.levels.INFO, { title = "Window Zoom" })
+  local origin = vim.t.zoom_origin
+  if origin then
+    if #vim.api.nvim_list_tabpages() == 1 then
+      vim.t.zoom_origin = nil
+      return
     end
+    -- Close the temporary tab before returning to the original window.
+    vim.cmd("tabclose")
+    if vim.api.nvim_win_is_valid(origin) then
+      vim.api.nvim_set_current_win(origin)
+    end
+    vim.notify("Zoom Out (Restored)", vim.log.levels.INFO, { title = "Window Zoom" })
+    return
+  end
+
+  local win = vim.api.nvim_get_current_win()
+  -- :tab split also works for unnamed and modified buffers.
+  vim.cmd("tab split")
+  vim.t.zoom_origin = win
+  vim.notify("Zoom In (Maximized)", vim.log.levels.INFO, { title = "Window Zoom" })
 end
 
-vim.keymap.set('n', '<C-w>w', toggle_zoom, { noremap = true, silent = true, desc = "Toggle window zoom" })
+vim.keymap.set("n", "<C-w>w", toggle_zoom, { silent = true, desc = "Toggle window zoom" })

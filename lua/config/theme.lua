@@ -4,12 +4,11 @@
 local status, nord = pcall(require, "nord")
 if status then
   nord.setup({
-    -- Your previous preferences preserved:
     transparent = true,
-    contrast = true,
-    cursorline_transparent = true,
-    enable_sidebar_background = true,
-    italic = false,
+    styles = {
+      comments = { italic = false },
+      bufferline = { modified = { italic = false } },
+    },
   })
 end
 
@@ -22,7 +21,7 @@ if not color_status then
 end
 
 -- Enable true color support
-if vim.fn.has("termguicolors") then
+if vim.fn.has("termguicolors") == 1 then
   vim.opt.termguicolors = true
 end
 

@@ -1,7 +1,8 @@
--- Set Python 3 provider
-vim.g.python3_host_prog = vim.fn.trim(vim.fn.system("which python3"))
-
--- Disable Perl provider (optional)
+-- These plugins use native Lua and LSP clients, not remote-plugin providers.
+-- Python LSP support does not depend on the pynvim provider.
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- Vim git fugitive
@@ -17,7 +18,7 @@ vim.opt.expandtab = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.smarttab = true
-vim.opt.softtabstop = 4
+vim.opt.softtabstop = 2
 vim.opt.background = "dark"
 vim.opt.termguicolors = true
 
